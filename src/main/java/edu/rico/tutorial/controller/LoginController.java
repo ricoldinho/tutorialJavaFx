@@ -1,8 +1,10 @@
-package edu.rico.tutorial;
+package edu.rico.tutorial.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,7 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginController implements Initializable {
 
     // 1. Inyección de componentes: JavaFX asigna aquí los elementos del FXML.
     @FXML
@@ -39,7 +41,7 @@ public class LoginController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
             // Cargamos el FXML de la nueva vista
-            Parent root = FXMLLoader.load(getClass().getResource("welcome-view.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("jugadores-view.fxml"));
 
             // Creamos una nueva escena con la vista de bienvenida
             Scene scene = new Scene(root);
@@ -56,5 +58,15 @@ public class LoginController {
             alert.setContentText("Por favor, verifica tu usuario y contraseña.");
             alert.showAndWait();
         }
+    }
+    @Override
+    public void initialize(java.net.URL url, java.util.ResourceBundle resourceBundle) {
+        // Este código se ejecuta ANTES de que la ventana sea visible.
+        System.out.println("La vista de login está lista. Poniendo el foco en el campo de usuario.");
+
+        // Ponemos el foco en el campo de usuario para que se pueda escribir directamente.
+        // Platform.runLater() asegura que esta acción se ejecute en el hilo de la UI de JavaFX
+        // de forma segura, una vez que el layout esté completamente calculado.
+        Platform.runLater(() -> usernameField.requestFocus());
     }
 }
