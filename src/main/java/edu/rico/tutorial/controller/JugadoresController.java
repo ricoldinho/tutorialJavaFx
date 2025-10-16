@@ -1,5 +1,7 @@
 package edu.rico.tutorial.controller;
 
+import edu.rico.tutorial.dao.JugadorDAO;
+import edu.rico.tutorial.dao.JugadorDAOImpl;
 import edu.rico.tutorial.model.Jugador;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,19 +12,22 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class JugadoresController implements Initializable {
 
-    // ... (Tus componentes @FXML se mantienen igual)
     @FXML private TableView<Jugador> tablaJugadores;
+    @FXML private TableColumn<Jugador, Integer> colId;
     @FXML private TableColumn<Jugador, String> colNombre;
     @FXML private TableColumn<Jugador, String> colApellido;
     @FXML private TableColumn<Jugador, String> colApodo;
     @FXML private TableColumn<Jugador, LocalDate> colFechaNacimiento;
     @FXML private TableColumn<Jugador, String> colTipoJuego;
 
+    // ¡NUEVO! Conectar el Label del FXML al controlador
+    @FXML private Label lblJugadorId;
     @FXML private TextField tfNombre;
     @FXML private TextField tfApellido;
     @FXML private TextField tfApodo;
@@ -33,19 +38,25 @@ public class JugadoresController implements Initializable {
     @FXML private Button btnModificar;
     @FXML private Button btnEliminar;
 
+    // ¡NUEVO! Referencia a nuestro DAO
+    private JugadorDAO jugadorDAO;
+
     private ObservableList<Jugador> listaJugadores;
 
     // AÑADIDO: Mantiene una referencia al jugador seleccionado
     private Jugador jugadorSeleccionado;
 
     public JugadoresController() {
+        // Inicializamos la implementación del DAO
+        this.jugadorDAO = new JugadorDAOImpl();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         listaJugadores = FXCollections.observableArrayList();
 
-        // Configuración de las columnas (se mantiene igual)
+        // ¡NUEVO! Configurar también la columna del ID
+        this.colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         this.colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         this.colApellido.setCellValueFactory(new PropertyValueFactory<>("apellido"));
         this.colApodo.setCellValueFactory(new PropertyValueFactory<>("apodo"));
@@ -55,8 +66,11 @@ public class JugadoresController implements Initializable {
         // Rellenar ComboBox (se mantiene igual)
         cbTipoJuego.setItems(FXCollections.observableArrayList("Farolero", "Agresivo", "Conservador", "Roca"));
 
-        cargarDatosDeEjemplo();
         tablaJugadores.setItems(listaJugadores);
+
+        // ¡MODIFICADO! Cargamos los datos desde la BD
+        cargarJugadoresDeLaBaseDeDatos();
+
 
         // GESTIÓN DE LA SELECCIÓN EN LA TABLA ---
         // Añadimos un listener para saber qué fila se está seleccionando
@@ -70,12 +84,10 @@ public class JugadoresController implements Initializable {
         );
     }
 
-    private void cargarDatosDeEjemplo() {
-        // ... (Este método se mantiene igual)
-        listaJugadores.add(new Jugador("Daniel", "Negreanu", "Kid Poker", LocalDate.of(1974, 7, 26), "Agresivo"));
-        listaJugadores.add(new Jugador("Phil", "Ivey", "No Home Jerome", LocalDate.of(1977, 2, 1), "Roca"));
-        listaJugadores.add(new Jugador("Vanessa", "Selbst", "Vanessa", LocalDate.of(1984, 7, 9), "Agresivo"));
-        listaJugadores.add(new Jugador("Phil", "Hellmuth", "The Poker Brat", LocalDate.of(1964, 7, 16), "Farolero"));
+    private void cargarJugadoresDeLaBaseDeDatos() {
+        listaJugadores.clear(); // Limpiamos la lista por si había datos
+        List<Jugador> jugadoresDeLaBD = jugadorDAO.getAllJugadores();
+        listaJugadores.addAll(jugadoresDeLaBD);
     }
 
 
@@ -83,15 +95,11 @@ public class JugadoresController implements Initializable {
     private void handleAnadir() {
         // Validamos que los campos no estén vacíos
         if (camposSonValidos()) {
-            Jugador nuevoJugador = new Jugador(
-                    tfNombre.getText(),
-                    tfApellido.getText(),
-                    tfApodo.getText(),
-                    dpFechaNacimiento.getValue(),
-                    cbTipoJuego.getValue()
-            );
-            listaJugadores.add(nuevoJugador);
-            handleLimpiar(); // Limpiamos el formulario después de añadir
+            Jugador nuevo = new Jugador(tfNombre.getText(), tfApellido.getText(), tfApodo.getText(),
+                    dpFechaNacimiento.getValue(), cbTipoJuego.getValue());
+            jugadorDAO.addJugador(nuevo); // <-- LLAMADA AL DAO
+            cargarJugadoresDeLaBaseDeDatos(); // <-- Refrescamos la tabla
+            handleLimpiar();
             mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador Añadido", "El nuevo jugador ha sido añadido a la lista.");
         } else {
             mostrarAlerta(Alert.AlertType.WARNING, "Datos Incompletos", "Por favor, rellena todos los campos del formulario.");
@@ -101,10 +109,10 @@ public class JugadoresController implements Initializable {
     @FXML
     private void handleModificar() {
         if (jugadorSeleccionado == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona un jugador de la tabla para modificar.");
+            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona " +
+                    "un jugador de la tabla para modificar.");
             return;
         }
-
         if (camposSonValidos()) {
             // Actualizamos los datos del objeto Jugador ya existente
             jugadorSeleccionado.setNombre(tfNombre.getText());
@@ -113,7 +121,8 @@ public class JugadoresController implements Initializable {
             jugadorSeleccionado.setFechaNacimiento(dpFechaNacimiento.getValue());
             jugadorSeleccionado.setTipoJuego(cbTipoJuego.getValue());
 
-            tablaJugadores.refresh(); // Refrescamos la tabla para mostrar los cambios
+            jugadorDAO.updateJugador(jugadorSeleccionado); // <-- LLAMADA AL DAO
+            cargarJugadoresDeLaBaseDeDatos(); // <-- Refrescamos
             handleLimpiar();
             mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador Modificado", "Los datos del jugador han sido actualizados.");
         } else {
@@ -124,7 +133,8 @@ public class JugadoresController implements Initializable {
     @FXML
     private void handleEliminar() {
         if (jugadorSeleccionado == null) {
-            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona un jugador de la tabla para eliminar.");
+            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona " +
+                    "un jugador de la tabla para eliminar.");
             return;
         }
 
@@ -136,7 +146,8 @@ public class JugadoresController implements Initializable {
 
         Optional<ButtonType> resultado = confirmacion.showAndWait();
         if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-            listaJugadores.remove(jugadorSeleccionado);
+            jugadorDAO.deleteJugador(jugadorSeleccionado.getId()); // <-- LLAMADA AL DAO
+            cargarJugadoresDeLaBaseDeDatos(); // <-- Refrescamos
             handleLimpiar();
             mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador Eliminado", "El jugador ha sido eliminado de la lista.");
         }
@@ -144,6 +155,8 @@ public class JugadoresController implements Initializable {
 
     @FXML
     private void handleLimpiar() {
+        // ¡CAMBIO! Reseteamos el Label del ID a su estado inicial.
+        lblJugadorId.setText("-");
         tfNombre.clear();
         tfApellido.clear();
         tfApodo.clear();
@@ -158,6 +171,9 @@ public class JugadoresController implements Initializable {
      * @param jugador El jugador cuyos datos se mostrarán.
      */
     private void rellenarFormulario(Jugador jugador) {
+        // ¡CAMBIO! Añadimos la lógica para actualizar el Label del ID.
+        // Lo convertimos a String para poder mostrarlo.
+        lblJugadorId.setText(String.valueOf(jugador.getId()));
         tfNombre.setText(jugador.getNombre());
         tfApellido.setText(jugador.getApellido());
         tfApodo.setText(jugador.getApodo());
