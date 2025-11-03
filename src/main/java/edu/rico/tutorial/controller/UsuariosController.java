@@ -3,6 +3,8 @@ package edu.rico.tutorial.controller;
 import edu.rico.tutorial.dao.JugadorDAO;
 import edu.rico.tutorial.dao.JugadorDAOImpl;
 import edu.rico.tutorial.model.Jugador;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.List;
@@ -38,6 +41,10 @@ public class UsuariosController implements Initializable {
     private ObservableList<Jugador> listaBusquedaJugadores;
     private ObservableList<Jugador> listaJugadoresFavoritos;
 
+    // --- Debounce ---
+    private Timeline debounceTimeline;
+    private static final int DEBOUNCE_DELAY_MS = 300;
+
     public UsuariosController() {
         this.jugadorDAO = new JugadorDAOImpl();
     }
@@ -59,16 +66,22 @@ public class UsuariosController implements Initializable {
         colApodoFavorito.setCellValueFactory(new PropertyValueFactory<>("apodo"));
         tablaJugadoresFavoritos.setItems(listaJugadoresFavoritos);
 
-        // 4. Configurar el listener para la búsqueda observable
+        // 4. Configurar el Timeline para el "debouncing"
+        debounceTimeline = new Timeline(new KeyFrame(Duration.millis(DEBOUNCE_DELAY_MS), event -> {
+            buscarJugadores(tfBuscador.getText());
+        }));
+        debounceTimeline.setCycleCount(1); // Ejecutar solo una vez
+
+        // 5. Configurar el listener para la búsqueda con debounce
         tfBuscador.textProperty().addListener((observable, oldValue, newValue) -> {
-            buscarJugadores(newValue);
+            debounceTimeline.stop(); // Detiene el temporizador anterior
+            debounceTimeline.playFromStart(); // Inicia uno nuevo
         });
     }
 
     private void buscarJugadores(String terminoBusqueda) {
         listaBusquedaJugadores.clear();
-        if (terminoBusqueda != null && !terminoBusqueda.isEmpty()) {
-            // Aquí necesitaremos un nuevo método en el DAO
+        if (terminoBusqueda != null && !terminoBusqueda.trim().isEmpty()) {
             List<Jugador> jugadoresEncontrados = jugadorDAO.buscarJugadoresPorNombreOApodo(terminoBusqueda);
             listaBusquedaJugadores.addAll(jugadoresEncontrados);
         }
@@ -81,12 +94,10 @@ public class UsuariosController implements Initializable {
             if (!listaJugadoresFavoritos.contains(jugadorSeleccionado)) {
                 listaJugadoresFavoritos.add(jugadorSeleccionado);
             } else {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador ya es favorito", "Este jugador ya " +
-                        "está en tu lista de favoritos.");
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador ya es favorito", "Este jugador ya está en tu lista de favoritos.");
             }
         } else {
-            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona" +
-                    " un jugador de la lista de búsqueda.");
+            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona un jugador de la lista de búsqueda.");
         }
     }
 
@@ -96,8 +107,7 @@ public class UsuariosController implements Initializable {
         if (jugadorSeleccionado != null) {
             listaJugadoresFavoritos.remove(jugadorSeleccionado);
         } else {
-            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Favorito Seleccionado", "Por favor, selecciona" +
-                    " un jugador de tu lista de favoritos.");
+            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Favorito Seleccionado", "Por favor, selecciona un jugador de tu lista de favoritos.");
         }
     }
 

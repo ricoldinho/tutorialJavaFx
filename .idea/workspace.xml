@@ -5,19 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="80a9bad7-665f-4fa6-af4f-94378f0bafc6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/controller/UsuariosController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/dao/UsuarioDAO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/dao/UsuarioDAOImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/edu/rico/tutorial/controller/usuarios-view.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/controller/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/controller/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/dao/JugadorDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/dao/JugadorDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/dao/JugadorDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/dao/JugadorDAOImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/db/DatabaseConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/db/DatabaseConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/edu/rico/tutorial/script_pokerfx_db.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edu/rico/tutorial/script_pokerfx_db.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/controller/UsuariosController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/edu/rico/tutorial/controller/UsuariosController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +88,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1762160581179</updated>
-      <workItem from="1762160582403" duration="5380000" />
+      <workItem from="1762160582403" duration="6821000" />
     </task>
     <servers />
   </component>
