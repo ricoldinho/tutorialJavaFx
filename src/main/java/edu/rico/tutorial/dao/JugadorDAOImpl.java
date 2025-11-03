@@ -13,14 +13,13 @@ public class JugadorDAOImpl implements JugadorDAO {
         List<Jugador> jugadores = new ArrayList<>();
         String sql = "SELECT * FROM jugadores";
 
-        // Usamos try-with-resources para asegurar que la conexión se cierre
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
                 Jugador jugador = new Jugador(
-                        rs.getInt("id"), // Asumimos que la tabla tiene una columna 'id'
+                        rs.getInt("id"),
                         rs.getString("nombre"),
                         rs.getString("apellido"),
                         rs.getString("apodo"),
@@ -81,10 +80,41 @@ public class JugadorDAOImpl implements JugadorDAO {
         }
     }
 
-    // Este método no lo usaremos en el controlador actual, pero es parte del contrato
     @Override
     public Jugador getJugadorById(int id) {
-        // Implementación sería similar a getAllJugadores pero con "WHERE id = ?"
+        // Implementación pendiente
         return null;
+    }
+
+    @Override
+    public List<Jugador> buscarJugadoresPorNombreOApodo(String termino) {
+        List<Jugador> jugadores = new ArrayList<>();
+        String sql = "SELECT * FROM jugadores WHERE LOWER(nombre) LIKE ? OR LOWER(apodo) LIKE ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            String terminoBusqueda = "%" + termino.toLowerCase() + "%";
+            pstmt.setString(1, terminoBusqueda);
+            pstmt.setString(2, terminoBusqueda);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Jugador jugador = new Jugador(
+                            rs.getInt("id"),
+                            rs.getString("nombre"),
+                            rs.getString("apellido"),
+                            rs.getString("apodo"),
+                            rs.getDate("fecha_nacimiento").toLocalDate(),
+                            rs.getString("tipoJuego")
+                    );
+                    jugadores.add(jugador);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar jugadores: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return jugadores;
     }
 }

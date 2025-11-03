@@ -3,9 +3,8 @@ module edu.rico.tutorial {
     requires javafx.fxml;
     requires javafx.graphics;
     requires java.sql;
-    requires com.mysql.cj;
+    requires org.mariadb.jdbc;
 
-    // --- El resto del fichero se queda igual ---
     opens edu.rico.tutorial.controller to javafx.fxml;
     exports edu.rico.tutorial.controller;
 

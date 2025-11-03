@@ -52,3 +52,22 @@ INSERT INTO jugadores (nombre, apellido, apodo, fecha_nacimiento, tipoJuego) VAL
                                                                                  ('Mustapha', 'Kanit', 'Mustacchione', '1991-01-24', 'Farolero'),
                                                                                  ('Ana', 'Márquez', 'Ana Marquez', '1986-12-19', 'Conservador'),
                                                                                  ('Juan', 'Pardo', 'Malaka$tyle', '1993-05-18', 'Agresivo');
+
+create table pokerfx.usuarios
+(
+    usuario_id       int auto_increment primary key,
+    nombre           varchar(55)  not null,
+    apellido         varchar(55)  not null,
+    nickname         varchar(155) null,
+    fecha_nacimiento date         not null,
+    email            varchar(255) not null,
+    password         varchar(255) not null,
+    constraint nickname
+        unique (nickname)
+);
+
+INSERT INTO pokerfx.usuarios (nombre, apellido, nickname, fecha_nacimiento, email)
+VALUES
+    ('Diego', 'Villares', 'ElPulpo', '1996-06-17', 'diego.villares@pokerfx.com', 'DiegoV'),
+    ('Yeremay', 'Hernández', 'Peke', '2002-12-10', 'yeremay.hernandez@pokerfx.com', 'YeremayH'),
+    ('David', 'Mella', 'Mella11', '2005-05-23', 'david.mella@pokerfx.com', 'DavidM');

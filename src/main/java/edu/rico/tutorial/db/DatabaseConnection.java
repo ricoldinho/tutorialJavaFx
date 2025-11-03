@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     // Constantes para los detalles de la conexión
-    private static final String URL = "jdbc:mysql://localhost:8889/pokerfx";
+    private static final String URL = "jdbc:mariadb://localhost:3306/pokerfx";
     private static final String USER = "root"; // <-- CAMBIA ESTO
-    private static final String PASSWORD = "root"; // <-- CAMBIA ESTO
+    private static final String PASSWORD = ""; // <-- CAMBIA ESTO
 
     private static Connection connection = null;
 
@@ -25,10 +25,10 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed()) {
             try {
                 // El Class.forName es opcional en versiones modernas de JDBC, pero es una buena práctica
-                Class.forName("com.mysql.cj.jdbc.Driver");
+                Class.forName("org.mariadb.jdbc.Driver");
                 connection = DriverManager.getConnection(URL, USER, PASSWORD);
             } catch (ClassNotFoundException e) {
-                System.err.println("Error: Driver JDBC de MySQL no encontrado.");
+                System.err.println("Error: Driver JDBC de MariaDB no encontrado.");
                 e.printStackTrace();
             }
         }

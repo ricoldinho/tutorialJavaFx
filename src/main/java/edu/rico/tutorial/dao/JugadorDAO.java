@@ -9,4 +9,5 @@ public interface JugadorDAO {
     void deleteJugador(int id);
     List<Jugador> getAllJugadores();
     Jugador getJugadorById(int id); // Útil para futuras implementaciones
+    List<Jugador> buscarJugadoresPorNombreOApodo(String termino);
 }
