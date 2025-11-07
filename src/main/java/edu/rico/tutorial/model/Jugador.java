@@ -29,6 +29,10 @@ public class Jugador {
         this.tipoJuego = tipoJuego;
     }
 
+    public Jugador() {
+
+    }
+
     // GETTER Y SETTER PARA EL ID
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

@@ -1,8 +1,11 @@
 package edu.rico.tutorial.controller;
 
+import edu.rico.tutorial.dao.FavoritoDAO;
+import edu.rico.tutorial.dao.FavoritoDAOImpl;
 import edu.rico.tutorial.dao.JugadorDAO;
 import edu.rico.tutorial.dao.JugadorDAOImpl;
 import edu.rico.tutorial.model.Jugador;
+import edu.rico.tutorial.model.Usuario;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
@@ -38,8 +41,11 @@ public class UsuariosController implements Initializable {
 
     // --- DAO y Listas Observables ---
     private JugadorDAO jugadorDAO;
+    private FavoritoDAO favoritoDAO;
     private ObservableList<Jugador> listaBusquedaJugadores;
     private ObservableList<Jugador> listaJugadoresFavoritos;
+
+    private Usuario usuarioLogueado;
 
     // --- Debounce ---
     private Timeline debounceTimeline;
@@ -47,6 +53,7 @@ public class UsuariosController implements Initializable {
 
     public UsuariosController() {
         this.jugadorDAO = new JugadorDAOImpl();
+        this.favoritoDAO = new FavoritoDAOImpl();
     }
 
     @Override
@@ -79,6 +86,13 @@ public class UsuariosController implements Initializable {
         });
     }
 
+    public void setUsuarioLogueado(Usuario usuario) {
+        this.usuarioLogueado = usuario;
+        if (usuarioLogueado != null && usuarioLogueado.getJugadoresFavoritos() != null) {
+            listaJugadoresFavoritos.addAll(usuarioLogueado.getJugadoresFavoritos());
+        }
+    }
+
     private void buscarJugadores(String terminoBusqueda) {
         listaBusquedaJugadores.clear();
         if (terminoBusqueda != null && !terminoBusqueda.trim().isEmpty()) {
@@ -91,13 +105,22 @@ public class UsuariosController implements Initializable {
     private void handleAnadirFavorito() {
         Jugador jugadorSeleccionado = tablaBusquedaJugadores.getSelectionModel().getSelectedItem();
         if (jugadorSeleccionado != null) {
-            if (!listaJugadoresFavoritos.contains(jugadorSeleccionado)) {
-                listaJugadoresFavoritos.add(jugadorSeleccionado);
+            if (usuarioLogueado != null) {
+                if (!listaJugadoresFavoritos.contains(jugadorSeleccionado)) {
+                    favoritoDAO.addJugadorFavorito(usuarioLogueado.getUsuario_id(), jugadorSeleccionado.getId());
+                    listaJugadoresFavoritos.add(jugadorSeleccionado);
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador Añadido", "El jugador ha sido " +
+                            "añadido a tus favoritos.");
+                } else {
+                    mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador ya es favorito", "Este jugador " +
+                            "ya está en tu lista de favoritos.");
+                }
             } else {
-                mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador ya es favorito", "Este jugador ya está en tu lista de favoritos.");
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No hay usuario logueado.");
             }
         } else {
-            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona un jugador de la lista de búsqueda.");
+            mostrarAlerta(Alert.AlertType.WARNING, "Ningún Jugador Seleccionado", "Por favor, selecciona" +
+                    " un jugador de la lista de búsqueda.");
         }
     }
 
@@ -105,7 +128,13 @@ public class UsuariosController implements Initializable {
     private void handleEliminarFavorito() {
         Jugador jugadorSeleccionado = tablaJugadoresFavoritos.getSelectionModel().getSelectedItem();
         if (jugadorSeleccionado != null) {
-            listaJugadoresFavoritos.remove(jugadorSeleccionado);
+            if (usuarioLogueado != null) {
+                favoritoDAO.removeJugadorFavorito(usuarioLogueado.getUsuario_id(), jugadorSeleccionado.getId());
+                listaJugadoresFavoritos.remove(jugadorSeleccionado);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador Eliminado", "El jugador ha sido eliminado de tus favoritos.");
+            } else {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error", "No hay usuario logueado.");
+            }
         } else {
             mostrarAlerta(Alert.AlertType.WARNING, "Ningún Favorito Seleccionado", "Por favor, selecciona un jugador de tu lista de favoritos.");
         }

@@ -1,7 +1,11 @@
 package edu.rico.tutorial.controller;
 
+import edu.rico.tutorial.dao.FavoritoDAO;
+import edu.rico.tutorial.dao.FavoritoDAOImpl;
 import edu.rico.tutorial.dao.UsuarioDAO;
 import edu.rico.tutorial.dao.UsuarioDAOImpl;
+import edu.rico.tutorial.model.Jugador;
+import edu.rico.tutorial.model.Usuario;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LoginController implements Initializable {
 
@@ -30,6 +35,7 @@ public class LoginController implements Initializable {
     private Button loginButton;
 
     private final UsuarioDAO usuarioDAO = new UsuarioDAOImpl();
+    private final FavoritoDAO favoritoDAO = new FavoritoDAOImpl();
 
     @FXML
     protected void onLoginButtonClick(ActionEvent event) throws IOException {
@@ -37,8 +43,21 @@ public class LoginController implements Initializable {
         String password = passwordField.getText();
 
         if (usuarioDAO.validarCredenciales(username, password)) {
+            // Una vez validado, obtenemos el usuario
+            Usuario usuario = usuarioDAO.getUsuarioPorUsername(username);
+
+            // Cargamos sus jugadores favoritos
+            List<Jugador> favoritos = favoritoDAO.getJugadoresFavoritos(usuario.getUsuario_id());
+            usuario.setJugadoresFavoritos(favoritos);
+
+            // Pasamos el objeto Usuario al siguiente controlador
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("usuarios-view.fxml"));
+            Parent root = loader.load();
+
+            UsuariosController usuariosController = loader.getController();
+            usuariosController.setUsuarioLogueado(usuario); // Necesitaremos este método en UsuariosController
+
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Parent root = FXMLLoader.load(getClass().getResource("usuarios-view.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();

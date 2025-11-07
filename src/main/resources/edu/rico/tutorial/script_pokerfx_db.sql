@@ -71,3 +71,11 @@ VALUES
     ('Diego', 'Villares', 'ElPulpo', '1996-06-17', 'diego.villares@pokerfx.com', 'DiegoV'),
     ('Yeremay', 'Hernández', 'Peke', '2002-12-10', 'yeremay.hernandez@pokerfx.com', 'YeremayH'),
     ('David', 'Mella', 'Mella11', '2005-05-23', 'david.mella@pokerfx.com', 'DavidM');
+
+CREATE TABLE favoritos (
+                           usuario_id INT NOT NULL,
+                           jugador_id INT NOT NULL,
+                           PRIMARY KEY (usuario_id, jugador_id),
+                           FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id),
+                           FOREIGN KEY (jugador_id) REFERENCES jugadores(id)
+);

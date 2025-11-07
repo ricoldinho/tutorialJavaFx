@@ -6,9 +6,9 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     // Constantes para los detalles de la conexión
-    private static final String URL = "jdbc:mariadb://localhost:3306/pokerfx";
+    private static final String URL = "jdbc:mariadb://localhost:8889/pokerfx";
     private static final String USER = "root"; // <-- CAMBIA ESTO
-    private static final String PASSWORD = ""; // <-- CAMBIA ESTO
+    private static final String PASSWORD = "root"; // <-- CAMBIA ESTO
 
     private static Connection connection = null;
 
