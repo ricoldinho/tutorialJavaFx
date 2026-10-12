@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/fxml/1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="rootContainer"
+            fx:controller="edu.rico.tutorial.tutorialclase.controllers.MainLayoutController"
+            prefWidth="1024" prefHeight="768"
+            styleClass="main-border-pane"
+            stylesheets="@../styles/theme.css">
+
+    <!-- REGIÓN SUPERIOR: Barra de Menú y Controles de Navegación -->
+    <top>
+        <VBox spacing="0">
+            <!-- Barra de Menú Tradicional de Sistema -->
+            <MenuBar styleClass="custom-menu-bar">
+                <Menu text="Navegación">
+                    <MenuItem text="Perfil de Usuario" onAction="#onNavPerfil"/>
+                    <MenuItem text="Dashboard" onAction="#onNavDashboard"/>
+                    <MenuItem text="Estadísticas" onAction="#onNavEstadisticas"/>
+                    <SeparatorMenuItem/>
+                    <MenuItem text="Salir" onAction="#onExitApp"/>
+                </Menu>
+                <Menu text="Ayuda">
+                    <MenuItem text="Acerca de..." onAction="#onShowAbout"/>
+                </Menu>
+            </MenuBar>
+
+            <!-- Barra de Herramientas Estilizada con Botones de Acceso Rápido -->
+            <HBox spacing="15" alignment="CENTER_LEFT" styleClass="toolbar-container">
+                <padding>
+                    <Insets top="10" right="20" bottom="10" left="20"/>
+                </padding>
+
+                <Label fx:id="lblHeaderTitle" text="Bienvenido" styleClass="header-title"/>
+                <Region HBox.hgrow="ALWAYS"/> <!-- Separador elástico horizontal -->
+
+                <Button fx:id="btnNavPerfil" text="Perfil" styleClass="nav-button"/>
+                <Button fx:id="btnNavDashboard" text="Dashboard" styleClass="nav-button"/>
+                <Button fx:id="btnNavEstadisticas" text="Estadísticas" styleClass="nav-button"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- REGIÓN CENTRAL: Contenedor Dinámico para las Pantallas -->
+    <center>
+        <!-- Inyectado dinámicamente desde el NavigationManager -->
+    </center>
+
+</BorderPane>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<VBox xmlns="http://javafx.com/fxml/1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.rico.tutorial.tutorialclase.controllers.PerfilController"
+      alignment="CENTER"
+      spacing="20"
+      styleClass="main-container"
+      stylesheets="@../styles/theme.css">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <!-- Encabezado -->
+    <Label text="Configurador de Perfil Dinámico" styleClass="title-label"/>
+
+    <!-- Formulario Formateado en Grid -->
+    <GridPane hgap="15" vgap="15" alignment="CENTER">
+        <!-- Campo Nombre de Usuario -->
+        <Label text="Nombre de Usuario:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="form-label"/>
+        <TextField fx:id="txtNombre" promptText="Ingrese su nombre..." GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="form-input"/>
+
+        <!-- Control de Radio (Slider + TextField) -->
+        <Label text="Tamaño del Avatar (px):" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="form-label"/>
+        <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="1" GridPane.columnIndex="1">
+            <Slider fx:id="sldRadio" min="20" max="120" value="50" showTickLabels="true" showTickMarks="true"/>
+            <TextField fx:id="txtRadio" prefWidth="60" styleClass="form-input-short"/>
+        </HBox>
+
+        <!-- Selector de Color -->
+        <Label text="Color del Avatar:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="form-label"/>
+        <ColorPicker fx:id="colorPicker" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <!-- Previsualización Dinámica del Avatar -->
+    <VBox alignment="CENTER" spacing="10" styleClass="preview-box">
+        <Label text="Vista Previa del Avatar" styleClass="subtitle-label"/>
+        <StackPane prefWidth="250" prefHeight="250" styleClass="canvas-pane">
+            <Circle fx:id="circlePreview"/>
+        </StackPane>
+        <Label fx:id="lblEstado" styleClass="status-label"/>
+    </VBox>
+
+    <!-- Botón de Confirmación -->
+    <Button fx:id="btnGuardar" text="Guardar Configuración" styleClass="btn-primary"/>
+
+</VBox>

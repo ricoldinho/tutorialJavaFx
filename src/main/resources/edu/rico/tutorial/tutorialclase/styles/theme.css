@@ -1,0 +1,107 @@
+/* Estilos Globales para el Panel de Configuración */
+.main-container {
+    -fx-background-color: #1e1e2e;
+}
+
+.title-label {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #cdd6f4;
+}
+
+.subtitle-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #a6adc8;
+}
+
+.form-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #bac2de;
+}
+
+.form-input, .form-input-short {
+    -fx-background-color: #313244;
+    -fx-text-fill: #cdd6f4;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px;
+}
+
+.preview-box {
+    -fx-background-color: #181825;
+    -fx-border-color: #45475a;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+.status-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #89b4fa;
+    -fx-font-style: italic;
+}
+
+.btn-primary {
+    -fx-background-color: #89b4fa;
+    -fx-text-fill: #11111b;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 25px;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #b4befe;
+}
+
+.btn-primary:disabled {
+    -fx-background-color: #45475a;
+    -fx-text-fill: #6c7086;
+    -fx-opacity: 0.7;
+}
+
+/* ========================================================================= */
+/* ESTILOS DE NAVEGACIÓN Y CONTENEDOR PRINCIPAL                              */
+/* ========================================================================= */
+.main-border-pane {
+    -fx-background-color: #1e1e2e;
+}
+
+.custom-menu-bar {
+    -fx-background-color: #181825;
+    -fx-border-color: #313244;
+    -fx-border-width: 0 0 1 0;
+}
+
+.toolbar-container {
+    -fx-background-color: #181825;
+    -fx-border-color: #45475a;
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #89b4fa;
+}
+
+.nav-button {
+    -fx-background-color: #313244;
+    -fx-text-fill: #cdd6f4;
+    -fx-font-size: 12px;
+    -fx-background-radius: 6px;
+    -fx-padding: 6px 15px;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #45475a;
+    -fx-text-fill: #ffffff;
+}
+
+.nav-button:disabled {
+    -fx-background-color: #89b4fa;
+    -fx-text-fill: #11111b;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.9;
+}
